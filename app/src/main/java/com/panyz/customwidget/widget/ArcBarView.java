@@ -1,5 +1,6 @@
 package com.panyz.customwidget.widget;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -25,7 +26,8 @@ public class ArcBarView extends View {
 
     private int radius;//弧形的半径
     private float result = 0;//滑过弧形的弧度
-    private float mStartAngle = 150;//开始时弧形弧度
+    private float mStartAngle = 150;//弧形起点弧度
+    private float mEndAngle = 240;//弧形结束弧度
 
     private RectF rectF;//弧形外接矩形
     private Rect textRect;//包裹文字的矩形
@@ -126,9 +128,9 @@ public class ArcBarView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         //绘制弧形
-        canvas.drawArc(rectF,mStartAngle,240,false,arcPaint2);
+        canvas.drawArc(rectF,mStartAngle,mEndAngle,false,arcPaint2);
         canvas.save();
-        canvas.drawArc(rectF, mStartAngle, 200, false, arcPaint1);
+        canvas.drawArc(rectF, mStartAngle, getResult(), false, arcPaint1);
         canvas.restore();
 
         //获取绘制文字的宽高给textRect
@@ -140,5 +142,53 @@ public class ArcBarView extends View {
         canvas.drawText(usedData, rectF.centerX() - textRect.width() / 2 + 80, rectF.centerY() + textRect.height() + 120, textPaint1);
 
     }
+
+    public float getResult() {
+        return result;
+    }
+
+    public void setResult(float result) {
+        ValueAnimator animator = ValueAnimator.ofFloat(0, (result * mEndAngle) / handleData());
+        animator.setTarget(this);
+        animator.setDuration(3000).start();
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                startAnim(animation);
+            }
+        });
+    }
+
+    private void startAnim(ValueAnimator animation) {
+        this.result = (float) animation.getAnimatedValue();
+        invalidate();
+    }
+
+    public String getTotalData() {
+        return totalData;
+    }
+
+    public void setTotalData(String totalData) {
+        this.totalData = totalData;
+    }
+
+    public String getUsedData() {
+        return usedData;
+    }
+
+    public void setUsedData(String usedData) {
+        this.usedData = usedData;
+    }
+
+    /**
+     * 获取可用流量的数值
+     * @return
+     */
+    private float handleData() {
+        String text = getTotalData();
+        float data = Float.parseFloat(text.substring(0, text.length() - 2));
+        return data;
+    }
+
 }
 
