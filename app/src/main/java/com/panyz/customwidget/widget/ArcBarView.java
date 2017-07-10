@@ -11,8 +11,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * @Priject: CustomAidget
- * @Package: com.panyz.customaidget.widget
+ * @Project: CustomWidget
+ * @Package: com.panyz.customwidget.widget
  * @Description: 弧形流量条控件
  * @Autor: panyz
  * @Date: 2017年07月10日 16:09
@@ -21,8 +21,8 @@ public class ArcBarView extends View {
 
     private Paint arcPaint1;//顶部弧形画笔
     private Paint arcPaint2;//底部弧形画笔
-    private Paint textPaint1;//文字画笔1
-    private Paint textPaint2;//文字画笔2
+    private Paint textPaint1;//大Size文字画笔
+    private Paint textPaint2;//小Size文字画笔
 
     private int radius;//弧形的半径
     private float result = 0;//滑过弧形的弧度
